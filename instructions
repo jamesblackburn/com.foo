@@ -1,0 +1,27 @@
+
+./builder/eclipse -nosplash -application org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher \
+    -artifactRepository file://`pwd`/foo_repo/ -metadataRepository file://`pwd`/foo_repo/ \
+    -source ./foo_rel \
+    -append -publishArtifacts
+
+# Publish the product
+./builder/eclipse  -nosplash -application org.eclipse.equinox.p2.publisher.ProductPublisher     \
+    -artifactRepository file://`pwd`/foo_repo/ -metadataRepository file://`pwd`/foo_repo/   \
+    -productFile `pwd`/com.foo/foo.product  \
+    -executable delta-pack/features/org.eclipse.equinox.executable_3.5.0.v20110530-7P7NFUFFLWUl76mart/ \
+    -flavor tooling   -append -publishArtifacts -configs ANY
+  
+#Install the application
+./builder/eclipse \
+   -nosplash \
+   -application org.eclipse.equinox.p2.director \
+   -repository file://`pwd`/foo_repo/ \
+   -installIU com.foo.product \
+   -profile FooProfile \
+   -profileProperties org.eclipse.update.install.features=false \
+   -destination foo \
+   -bundlepool foo \
+   -p2.os linux \
+   -p2.ws gtk \
+   -p2.arch x86_64 \
+   -roaming 
